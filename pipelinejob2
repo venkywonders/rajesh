@@ -1,0 +1,59 @@
+pipeline {
+    agent 'any'
+    stages {
+        stage('git-clone') {
+            steps {
+                sh '''
+                rm -rf rajesh
+                pwd
+                ls -ll
+                git clone https://github.com/venkywonders/rajesh.git
+                ls -ll
+                '''
+            }
+        }
+         stage('compile') {
+            steps {
+                sh '''
+                pwd
+                ls -ll
+                cd rajesh
+                ls -ll
+                mvn clean
+                mvn compile
+                '''
+            }
+        }
+          stage('unit-test') {
+            steps {
+                sh '''
+                pwd
+                ls -ll
+                cd rajesh
+                ls -ll
+                mvn test
+                '''
+            }
+        }
+           stage('package') {
+            steps {
+                sh '''
+                pwd
+                ls -ll
+                cd rajesh
+                ls -ll
+                mvn package
+                '''
+            }
+        }
+           stage('artifactory') {
+            steps {
+                sh '''
+                curl -uadmin:AP9NJRGC5ZVBkYE5F4JKSH2Voju -T /c/Users/Lenovo/.jenkins/workspace/pipelinejob2/rajesh/target./hj-1.0.0.jar "http://localhost:8081/artifactory/devops-key/"
+
+                '''
+            }
+        }
+        
+    }
+}
